@@ -1,0 +1,68 @@
+
+<!-- {{TAGS}} -->
+
+<!-- <div flex-xs="" flex-gt-xs="40" layout="column"> if smaller divided in columns-->
+<md-card>
+	<md-card-header>
+		<md-card-avatar>
+            <img src="firebaseIcon.png">
+            </md-card-avatar>
+		<md-card-header-text>
+			<span class="md-title">Search Firebase</span>
+		</md-card-header-text>
+	</md-card-header>
+
+<md-card-content  ng-cloak="" class="virtualRepeatdemoVerticalUsage" data-ng-init="FetchData()">
+  <md-content layout="column">
+
+   <form class="form-inline">
+   		<md-input-container class="md-block" flex-gt-sm>
+   		  <label>Filter By</label>
+	      <input ng-model="query" type="text"
+	        >
+	     </md-input-container>
+    </form>
+
+
+    <form  class="form-inline" ng-submit="Post_Add()">
+    	<md-input-container class="md-block" flex-gt-sm>
+   		  <label>Add new tag</label>
+			<input  type="text" ng-model="newTagValue"  >
+		</md-input-container>
+	</form>
+
+		
+		 <md-card>
+		    <md-virtual-repeat-container id="vertical-container"  ng-show="showData">
+		 
+		      <div class="repeated-item" md-virtual-repeat="item in TAGS | filter:query " flex>
+		    
+		     
+
+		      	<div class="lefto">
+			       <label   ng-hide="item.editing" ng-dblclick="editItem(item)">{{item.name}}</label>
+
+			        <input    ng-blur="item.editing =false;doneEditing(item)"  ng-show="item.editing" ng-model="item.name" 
+			        ng-keypress="enterPressed($event,item)"
+			        autofocus />
+				</div>
+
+			   <div class="righto">
+			        <md-button  class=" buttonColor md-fab md-mini "  ng-click="Post_Delete(item, $index)">
+			        	<i class="material-icons" >clear</i>
+			        </md-button>
+			    </div>
+			   
+
+		      </div>
+		
+
+		    </md-virtual-repeat-container>
+		  </md-card>
+		
+  </md-content>
+
+</md-card-content>
+</md-card>
+
+<!--<div> -->

@@ -1,0 +1,55 @@
+
+
+/*  ============================ virtual container ============================*/ 
+.virtualRepeatdemoVerticalUsage #vertical-container {
+  height: 250px;
+  width: 100%;
+  /*max-width: 400px;*/ }
+
+.virtualRepeatdemoVerticalUsage .repeated-item {
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+  height: 40px;
+  width: 100%;
+  margin: 20px;
+  clear: both;
+}
+
+.virtualRepeatdemoVerticalUsage .repeated-item .lefto{
+  float: left;
+ 
+}
+
+.virtualRepeatdemoVerticalUsage .repeated-item .righto{
+  float: right;
+  margin-right: 30px;
+  margin-top:-15px;
+
+}
+
+.virtualRepeatdemoVerticalUsage md-content {
+  background-color: white;
+  margin: 16px; }
+
+.virtualRepeatdemoVerticalUsage md-virtual-repeat-container {
+  /*border: solid 1px grey; */
+  width:100%;
+}
+
+.virtualRepeatdemoVerticalUsage .md-virtual-repeat-container .md-virtual-repeat-offsetter div {
+  padding-left: 16px; }
+
+
+.md-button.md-fab {
+        background-color: #00bcd4;
+    color: rgb(255,255,255);
+  }
+.material-icons{
+  color:#fec527;
+  margin-top: 6px;
+}
+
+
+
+
+
