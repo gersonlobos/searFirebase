@@ -9,27 +9,28 @@
 .virtualRepeatdemoVerticalUsage .repeated-item {
   border-bottom: 1px solid #ddd;
   box-sizing: border-box;
-  height: 40px;
+  height: 50px;
   width: 100%;
-  margin: 20px;
+  
   clear: both;
 }
 
 .virtualRepeatdemoVerticalUsage .repeated-item .lefto{
   float: left;
+  padding: 12px 17px 12px 17px;
  
 }
 
 .virtualRepeatdemoVerticalUsage .repeated-item .righto{
   float: right;
-  margin-right: 30px;
-  margin-top:-15px;
+
 
 }
 
 .virtualRepeatdemoVerticalUsage md-content {
   background-color: white;
-  margin: 16px; }
+ 
+}
 
 .virtualRepeatdemoVerticalUsage md-virtual-repeat-container {
   /*border: solid 1px grey; */
@@ -37,7 +38,8 @@
 }
 
 .virtualRepeatdemoVerticalUsage .md-virtual-repeat-container .md-virtual-repeat-offsetter div {
-  padding-left: 16px; }
+  
+}
 
 
 .md-button.md-fab {
@@ -50,6 +52,29 @@
 }
 
 
+
+/*   ----------------  */
+.editing {
+  border-bottom: none;
+   
+}
+
+.editing .edit {
+  display: block;
+  width: 506px;
+  padding: 10px;
+}
+
+.editing .view {
+  display: none;
+   width: 400px;
+  
+  
+}
+
+.editing:last-child {
+  margin-bottom: -1px;
+}
 
 
 

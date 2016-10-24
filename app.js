@@ -2,12 +2,16 @@
   'use strict';
 
     angular
-      .module('MyApp',['ngMaterial'])
+      .module('MyApp',['ngMaterial','firebase'])
       .controller('AppCtrl', function($timeout) {
 
+      	
+
+      	
           this.groupid = {
     id: '-KU8hApNMwOBdktFgzMx'// key for the group in firebase database
   };
+       
        
       });
 })();

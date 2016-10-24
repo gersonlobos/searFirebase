@@ -12,7 +12,7 @@
 		</md-card-header-text>
 	</md-card-header>
 
-<md-card-content  ng-cloak="" class="virtualRepeatdemoVerticalUsage" data-ng-init="FetchData()">
+<md-card-content  ng-cloak="" class="virtualRepeatdemoVerticalUsage" ><!--  data-ng-init="FetchData()"-->
   <md-content layout="column">
 
    <form class="form-inline">
@@ -24,7 +24,7 @@
     </form>
 
 
-    <form  class="form-inline" ng-submit="Post_Add()">
+    <form  class="form-inline" ng-submit="Add_Tag() "><!--  Post_Add()-->
     	<md-input-container class="md-block" flex-gt-sm>
    		  <label>Add new tag</label>
 			<input  type="text" ng-model="newTagValue"  >
@@ -35,26 +35,36 @@
 		 <md-card>
 		    <md-virtual-repeat-container id="vertical-container"  ng-show="showData">
 		 
-		      <div class="repeated-item" md-virtual-repeat="item in TAGS | filter:query " flex>
-		    
+		<!-- class="repeated-item"--> 
+	<div  md-virtual-repeat="item in TAGS | filter:query | orderBy:'+':true " ng-class="{editing: item == editedTag}" flex>
+		   
 		     
+			<div class='repeated-item'>
+		      	<div class="view">
 
-		      	<div class="lefto">
-			       <label   ng-hide="item.editing" ng-dblclick="editItem(item)">{{item.name}}</label>
+			       <label class='lefto' ng-dblclick="editTag(item)">{{item.name}}</label>
 
-			        <input    ng-blur="item.editing =false;doneEditing(item)"  ng-show="item.editing" ng-model="item.name" 
-			        ng-keypress="enterPressed($event,item)"
-			        autofocus />
-				</div>
-
-			   <div class="righto">
-			        <md-button  class=" buttonColor md-fab md-mini "  ng-click="Post_Delete(item, $index)">
+			       <md-button  class=" buttonColor md-fab md-mini righto"  ng-click="removeTAG(item)">
 			        	<i class="material-icons" >clear</i>
 			        </md-button>
+			      
 			    </div>
+
+			        <form ng-submit="doneEditing(item)" ng-if='item == editedTag'>
+			        	<input  class="edit"  ng-model="item.name"  ng-blur="doneEditing(item)" ng-focus="item == editedTag"  
+			        autofocus />
+			        </form>
+			</div?
+				
+
+					
+			    
+			  
+
+		
 			   
 
-		      </div>
+		      </div><!-- end ng-repeat-->
 		
 
 		    </md-virtual-repeat-container>

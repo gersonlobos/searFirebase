@@ -10,137 +10,97 @@ angular.module('MyApp').component('heroPetail', {
   controller: HeroDetailController,
   controllerAs: 'Componentctrl',
   bindings: {
-    groupId: '='
+    groupId: '@'
+
   }
 })
-  .factory('dataService', function($http, $log, $q) {
-  	console.log('-- dataService');
-  		 
 
-
-    return {
-      getdata_Q: function(url) {
-      	console.log('service get data')
-      	  	var deferred = $q.defer();
-		      	 $http.get(url+'.json?print=pretty').success(function(data) { 
-		      	 //$log.error('check this out', data);
-         	 deferred.resolve( data);
-
-       }).error(function(msg, code) {
-
-          deferred.reject(msg);
-          $log.error(msg, code);
-       });//end .error
-
-
-       return deferred.promise;
-      }
-    }//end return object
-  });
 
 //------------------------------
-function HeroDetailController($scope,$timeout,dataService) {
+function HeroDetailController($scope,$timeout,$firebase,$firebaseArray) {
+
+  // Initialize the Firebase SDK
+ var config = {
+    apiKey: "AIzaSyBPzkxzeLSZxEXii1aKY0KbBLxOjwy8On8",
+    authDomain: "gersonlobos-resume-ac96c.firebaseapp.com",
+    databaseURL: "https://gersonlobos-resume-ac96c.firebaseio.com",
+    storageBucket: "gersonlobos-resume-ac96c.appspot.com",
+    messagingSenderId: "379404230666"
+  };
+  firebase.initializeApp(config);
+
+
 console.log("HeroDetailController-->bindings:",this.groupId);
 
+ var ctrl = this;
 
-	var pathToTags= 'groups/'+this.groupId.id+'/tags/';
+	var pathToTags= 'groups/'+this.groupId+'/tags/';
 		var firebase_url=firebase.database().ref().toString()+pathToTags;
 		$scope.firebaseRef= firebase.database().ref(pathToTags);
 		$scope.showData=false;
+    $scope.newTagValue='';
+
+    $scope.editedTag = null;
 
       	 $scope.TAGS=[]; 
      
-		//dataService.getdata_Q(firebase_url).then(function(value) { $scope.DATA= value;});
-
-		  $scope.user = {
-		    name: 'awesome user'
-		  };  
+     
 
 
+$scope.TAGS = $firebaseArray($scope.firebaseRef);
+//console.log("TAGS HERE:",$scope.TAGS);
+
+$scope.$watch('TAGS', function(){
+    var total = 0;
+    var order = 0;
+    $scope.TAGS.forEach(function(TAG){
+      //console.log('TAG',TAG)
+  
+      
+      if (TAG.order) {
+        total++;
+      }
+      //console.log('total:',total);
+    });
+
+    $scope.showData=true;
+  }, true);
 
 
-        $scope.FetchData= function(){
+//============================= new way with $firebaseArray
+  $scope.Add_Tag= function(){
+      var newTag = $scope.newTagValue.trim();
+    if (!newTag.length) {
+      return;
+    }
+    // push to firebase
+    $scope.TAGS.$add({
+      name: newTag,
+      order: 100
+    });
+    $scope.newTagValue = '';
 
-          	console.log('--- getAll ---');
-			$scope.firebaseRef.once('value', function (snapshot) {
-			  
-			  	console.log('gerson values:', snapshot.val());
-			    snapshot.forEach(function(childSnapshot) {
-			    	var name= childSnapshot.val().name;
-			    	var order=childSnapshot.val().order;
-			    	//no push but unshift to keep order
-			 	$scope.TAGS.unshift( {'name':name,'key':childSnapshot.key,'order':order,'editing':false});
-			 	$scope.$apply();
-			    });  
+  };
 
-		    
-			}).then(function(){
-				$scope.showData=true;
-				$scope.$apply();
-				console.log('promised called');
-			});//end firebaseRef.on('value'
-        };//end FetchData
+  $scope.removeTAG = function(TAG){
+    $scope.TAGS.$remove(TAG);
+  };
 
+    $scope.doneEditing = function(TAG){
+      console.log('doneEditing',TAG);
+    $scope.editedTag = null;
+    var name = TAG.name.trim();
+    if (name) {
+      $scope.TAGS.$save(TAG);
+    } else {
+      $scope.removeTAG(TAG);
+    }
+  };
 
-		$scope.editItem = function (item) {
-        	item.editing = true;
-   		 };
-   		$scope.doneEditing = function (item) {//click away
-   			item.editing = false;
-   			Post_Edit(item.key,item.name,item.order); //(tagID,name,order);
-    	};
-    	$scope.enterPressed= function(keyEvent, item){
-    		   	if (keyEvent.which === 13){
- 			   console.log('Enter pressed..');
- 				item.editing = false;
-
-        	Post_Edit(item.key,item.name,item.order); //(tagID,name,order);
-			}//end if (keyEvent.which === 13)
-        	
-    	};
-         function Post_Edit(tagID,name,order){
-         	console.log('calling firebase Post_Edit...');
-         	console.log(tagID+' '+name+' '+order);
-        	firebase.database().ref(pathToTags + tagID)
-        	.set({
-			    name: name,
-			    order: order
-			});
-        };//end PostEdit
-         $scope.Post_Delete=function(Tag, index){
-        	console.log('calling firebase Post_Delete');
-        	console.log('Tag:',Tag);
-        	console.log('index:',index);
-
-        	firebase.database().ref(pathToTags + Tag.key).remove();
-        	$scope.TAGS.splice(index, 1);// use if not using 
-
-        };//end PostEdit
-
-        $scope.Post_Add= function(){
-
-        	 console.log('calling firebase Post_Add');
-		    
-
-		    var updates = {};
-		    var newTagKey = $scope.firebaseRef.push().key;
-
-		    updates[pathToTags+ newTagKey] = {
-			    name: $scope.newTagValue,
-			    order:100
-			  };
-
-			 firebase.database().ref().update(updates);//add to database
-			 							//Note: check if i can pass a call back and on success 
-			 							// add it to array in ui. on fail then not. 
-
-			 // push to add at then end. and unshift at the beginning 
-			$scope.TAGS.unshift({name:$scope.newTagValue,key: newTagKey ,editing:false});
-		    $scope.newTagValue = '';
-
-        };//end 
-
-
+  $scope.editTag = function(Tag){
+    $scope.editedTag = Tag;
+    $scope.originalTag = angular.extend({}, $scope.editedTag);
+  };
 
         
 	}// end controller
