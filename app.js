@@ -3,14 +3,13 @@
 
     angular
       .module('MyApp',['ngMaterial','firebase'])
-      .controller('AppCtrl', function($timeout) {
+      .controller('AppCtrl', function( $timeout) {
 
       	
 
-      	
-          this.groupid = {
-    id: '-KU8hApNMwOBdktFgzMx'// key for the group in firebase database
-  };
+      	//$scope.groupid ='-KU8hApNMwOBdktFgzMx';
+         // this.groupid ='-KU8hApNMwOBdktFgzMx';// key for the group in firebase database
+
        
        
       });

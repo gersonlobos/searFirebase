@@ -1,23 +1,22 @@
 (function(angular) {
   'use strict';
 
-
-
 //================================================
 
-angular.module('MyApp').component('heroPetail', {
-  templateUrl: 'heroDetails.html',
-  controller: HeroDetailController,
-  controllerAs: 'Componentctrl',
+angular.module('MyApp').component('tagList', {
+  templateUrl: 'tagList.html',
+  controller: TagListController,
+  controllerAs: 'TagListctrl',
   bindings: {
-    groupId: '@'
+    groupId: '@',
+    onUpdate: '&'
 
   }
 })
 
 
 //------------------------------
-function HeroDetailController($scope,$timeout,$firebase,$firebaseArray) {
+function TagListController($scope,$timeout,$firebase,$firebaseArray) {
 
   // Initialize the Firebase SDK
  var config = {
@@ -30,76 +29,89 @@ function HeroDetailController($scope,$timeout,$firebase,$firebaseArray) {
   firebase.initializeApp(config);
 
 
-console.log("HeroDetailController-->bindings:",this.groupId);
+console.log("TagListController-->bindings:",this.groupId);
 
  var ctrl = this;
 
 	var pathToTags= 'groups/'+this.groupId+'/tags/';
 		var firebase_url=firebase.database().ref().toString()+pathToTags;
-		$scope.firebaseRef= firebase.database().ref(pathToTags);
-		$scope.showData=false;
-    $scope.newTagValue='';
+		var firebaseRef= firebase.database().ref(pathToTags);
 
-    $scope.editedTag = null;
+		$scope.showData=false;
+    ctrl.newTagValue='';
+
+    ctrl.editedTag = null;
 
       	 $scope.TAGS=[]; 
      
      
 
 
-$scope.TAGS = $firebaseArray($scope.firebaseRef);
+ ctrl.TAGS = $firebaseArray( firebaseRef);
 //console.log("TAGS HERE:",$scope.TAGS);
 
-$scope.$watch('TAGS', function(){
-    var total = 0;
-    var order = 0;
-    $scope.TAGS.forEach(function(TAG){
-      //console.log('TAG',TAG)
-  
-      
-      if (TAG.order) {
-        total++;
-      }
-      //console.log('total:',total);
-    });
+  $scope.$watch( angular.bind(ctrl,function(){
 
-    $scope.showData=true;
-  }, true);
+      return ctrl.TAGS;
+    } ),function(newVal, oldVal){
+        // now we will pickup changes to newVal and oldVal
+        console.log('newVal: ',newVal);
+        $scope.showData=true;
+  });
 
 
+    
 //============================= new way with $firebaseArray
-  $scope.Add_Tag= function(){
-      var newTag = $scope.newTagValue.trim();
+  ctrl.Add_Tag= function(){
+    console.log('adding new tag.');
+      var newTag = ctrl.newTagValue.trim();
     if (!newTag.length) {
       return;
     }
     // push to firebase
-    $scope.TAGS.$add({
+    ctrl.TAGS.$add({
       name: newTag,
-      order: 100
+      order: (ctrl.TAGS.length +1)
     });
-    $scope.newTagValue = '';
+    ctrl.newTagValue = '';
 
   };
 
-  $scope.removeTAG = function(TAG){
-    $scope.TAGS.$remove(TAG);
+  ctrl.removeTAG = function(TAG){
+    console.log('ctrl.removeTAG:',TAG.order);
+
+    if(TAG.order==ctrl.TAGS.length){
+      console.log('removing last');
+      ctrl.TAGS.$remove(TAG);
+    }
+    else{
+      var index=TAG.order;
+      ctrl.TAGS.$remove(TAG);
+      console.log('removing middle');
+      for (var i =index; i < ctrl.TAGS.length; i++) {
+        ctrl.TAGS[i].order=i;
+        ctrl.TAGS.$save(ctrl.TAGS[i]);
+      }
+
+
+    }
+    ctrl.TAGS.$remove(TAG);
   };
 
-    $scope.doneEditing = function(TAG){
+    ctrl.doneEditing = function(TAG){
       console.log('doneEditing',TAG);
-    $scope.editedTag = null;
+    ctrl.editedTag = null;
     var name = TAG.name.trim();
     if (name) {
-      $scope.TAGS.$save(TAG);
+      ctrl.TAGS.$save(TAG);
     } else {
-      $scope.removeTAG(TAG);
+      ctrl.removeTAG(TAG);
     }
   };
 
-  $scope.editTag = function(Tag){
-    $scope.editedTag = Tag;
-    $scope.originalTag = angular.extend({}, $scope.editedTag);
+  ctrl.editTag = function(Tag){
+    ctrl.editedTag = Tag;
+    ctrl.originalTag = angular.extend({}, ctrl.editedTag);
   };
 
         
