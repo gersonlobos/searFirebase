@@ -14,7 +14,14 @@
           storageBucket: "gersonlobos-resume-ac96c.appspot.com",
           messagingSenderId: "379404230666"
         };
-     
+      // var config = {
+      //     apiKey: "AIzaSyCMbMXNiYE0ljB87lDh8NIdafddxpecCzs",
+      //     authDomain: "addhere-test.firebaseapp.com",
+      //     databaseURL: "https://addhere-test.firebaseio.com",
+      //     storageBucket: "addhere-test.appspot.com",
+      //     messagingSenderId: "565921947601"
+      // };
+           
         firebase.initializeApp(config);
 
        
