@@ -26,7 +26,8 @@
         $scope.status = '  ';
         $scope.message='';
 
-            $scope.showAdvanced = function(ev) {
+            $scope.showAdvanced = function() {
+              console.log("showAdvanced");
             $mdDialog.show({
               controller: DialogController,
               templateUrl: 'loginDIALOG.html',
@@ -44,13 +45,35 @@
 
             function DialogController($scope, $mdDialog) {
                $scope.message='';
+
               $scope.hide = function() {
                 $mdDialog.hide();
               };
 
-              $scope.createAccount = function() {
+              $scope.createAccount = function(user) {
+                console.log('create Account',user);
                 //$mdDialog.cancel();
-                $mdDialog.hide();
+                //$mdDialog.hide();
+                firebase.auth().createUserWithEmailAndPassword(user.email, user.password).catch(function(error) {
+                  // Handle Errors here.
+                  var errorCode = error.code;
+                  var errorMessage = error.message;
+                  console.log(errorCode,errorMessage);
+                  document.getElementById("logInMessage").innerHTML=''+errorMessage;
+                  // ...
+                }); 
+                    firebase.auth().onAuthStateChanged(function(user) {
+                    if(user){
+                      console.log('I have a user');
+                      $mdDialog.hide();
+
+                    }else{
+
+                      console.log('I dont have a user');
+                    }
+
+                  });
+
               };
 
               $scope.logme = function(user) {
@@ -73,7 +96,7 @@
 
                     }
 
-                  })
+                  });
 
 
                // $mdDialog.hide();
@@ -85,38 +108,19 @@
 
 //----------------------------------------------------------------------
         // sign in with email and password
-        var LogIN=function(email,password){
-          firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log('error in LogIN',errorCode,errorMessage)
-            $scope.message=errorMessage;
-            // ...
-          });
 
-        };
 
         $scope.signOut=function(){
+          
+
           firebase.auth().signOut().then(function() {
             // Sign-out successful.
+            $scope.showAdvanced();
             console.log('logged out')
           }, function(error) {
             // An error happened.
           });
         };
-
-        var CreateAccount=function(email,password){
-          firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode,errorMessage);
-            // ...
-          });  
-        };
-
-
 
 
 
