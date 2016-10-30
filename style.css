@@ -109,4 +109,13 @@
  /* margin-top: 50px;*/
 
 }
+md-dialog-content{
+  margin: 0px 20px 0px 20px;
+}
+
+md-dialog-content  .dialogContent{
+  margin-top: 10px;
+}
+
+
 
