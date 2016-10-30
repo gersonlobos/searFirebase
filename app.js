@@ -3,16 +3,150 @@
 
     angular
       .module('MyApp',['ngMaterial','firebase'])
-      .controller('AppCtrl', function( $timeout) {
+      .config(function() {
 
-      	
-
-      	//$scope.groupid ='-KU8hApNMwOBdktFgzMx';
-         // this.groupid ='-KU8hApNMwOBdktFgzMx';// key for the group in firebase database
+                    // Initialize the Firebase SDK
+    
+       var config = {
+          apiKey: "AIzaSyBPzkxzeLSZxEXii1aKY0KbBLxOjwy8On8",
+          authDomain: "gersonlobos-resume-ac96c.firebaseapp.com",
+          databaseURL: "https://gersonlobos-resume-ac96c.firebaseio.com",
+          storageBucket: "gersonlobos-resume-ac96c.appspot.com",
+          messagingSenderId: "379404230666"
+        };
+     
+        firebase.initializeApp(config);
 
        
+        
+      })
+      .controller('AppCtrl', function( $scope,$mdDialog) {
+
+         $scope.customFullscreen = false;
+        $scope.status = '  ';
+        $scope.message='';
+
+            $scope.showAdvanced = function(ev) {
+            $mdDialog.show({
+              controller: DialogController,
+              templateUrl: 'loginDIALOG.html',
+              parent: angular.element(document.body),
+              
+              clickOutsideToClose:false,
+              fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            })
+            .then(function(answer) {
+              $scope.status = 'You said the information was "' + answer + '".';
+            }, function() {
+              $scope.status = 'You cancelled the dialog.';
+            });
+          };
+
+            function DialogController($scope, $mdDialog) {
+               $scope.message='';
+              $scope.hide = function() {
+                $mdDialog.hide();
+              };
+
+              $scope.createAccount = function() {
+                //$mdDialog.cancel();
+                $mdDialog.hide();
+              };
+
+              $scope.logme = function(user) {
+                console.log('logme triggered');
+                console.log('user: ',user);
+                
+                firebase.auth().signInWithEmailAndPassword(user.email, user.password).catch(function(error) {
+                  // Handle Errors here.
+                  var errorCode = error.code;
+                  var errorMessage = error.message;
+                  console.log('error in LogIN',errorCode,errorMessage)
+                  document.getElementById("logInMessage").innerHTML=''+errorMessage;
+                  // ...
+                });
+
+                 firebase.auth().onAuthStateChanged(function(user) {
+                    if(user){
+                      console.log('I have a user');
+                      $mdDialog.hide();
+
+                    }
+
+                  })
+
+
+               // $mdDialog.hide();
+              };
+
+
+
+            };
+
+//----------------------------------------------------------------------
+        // sign in with email and password
+        var LogIN=function(email,password){
+          firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log('error in LogIN',errorCode,errorMessage)
+            $scope.message=errorMessage;
+            // ...
+          });
+
+        };
+
+        $scope.signOut=function(){
+          firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            console.log('logged out')
+          }, function(error) {
+            // An error happened.
+          });
+        };
+
+        var CreateAccount=function(email,password){
+          firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(errorCode,errorMessage);
+            // ...
+          });  
+        };
+
+
+
+
+
+
+
+
+
+
+
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              // User is signed in.
+              console.log('user is logged in',user.email);
+              
+            } else {
+              // No user is signed in.
+              $scope.showAdvanced();
+            //$scope.clickHandle('gerson.lobos@gmail.com','loco');
+
+            }
+          });
        
-      });
+
+
+
+
+
+
+
+      });// end controller
 })();
 
 

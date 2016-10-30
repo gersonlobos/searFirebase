@@ -19,28 +19,50 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 
+
     <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.js"></script>
 
       <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.4.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.4.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.4.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-database.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.0.2/angularfire.js"></script>
 
 
+
      <script src="app.js"></script>
-      <script src="controller.js"></script>
+      <script src="taglistCTRL.js"></script>
+
 
   </head>	
 
 
-  <body ng-app="MyApp">
+  <body ng-app="MyApp" ng-controller="AppCtrl">
        
-          <div ng-controller="AppCtrl">
-            <tag-list group-id="-KU8hApNMwOBdktFgzMx"> </tag-list>
-          </div>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        
+        <h2>
+          <span>Search Firebase</span>
+        </h2>
+        <span flex></span>
+
+       <md-button class="md-fab md-mini" ng-click="signOut()" aria-label="nothing">
+          <md-icon md-svg-src="user2.svg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+
+
+
+
+
+         <md-content layout="column" flex class="md-padding">
+            <tag-list class="listContent" group-id="-KU8hApNMwOBdktFgzMx"> </tag-list>
+          </md-content>
 
   </body>
 
