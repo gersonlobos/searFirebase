@@ -43,10 +43,8 @@
               clickOutsideToClose:false,
               fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
             })
-            .then(function(answer) {
-              $scope.status = 'You said the information was "' + answer + '".';
+            .then(function(user) {
             }, function() {
-              $scope.status = 'You cancelled the dialog.';
             });
           };
 
@@ -71,7 +69,8 @@
                 }); 
                     firebase.auth().onAuthStateChanged(function(user) {
                     if(user){
-                      console.log('I have a user');
+                      //console.log('I have a user');
+                      ga('set', 'userId', user.email);
                       $mdDialog.hide();
 
                     }else{
@@ -91,14 +90,16 @@
                   // Handle Errors here.
                   var errorCode = error.code;
                   var errorMessage = error.message;
-                  console.log('error in LogIN',errorCode,errorMessage)
+                  //console.log('error in LogIN',errorCode,errorMessage)
                   document.getElementById("logInMessage").innerHTML=''+errorMessage;
                   // ...
                 });
 
                  firebase.auth().onAuthStateChanged(function(user) {
                     if(user){
-                      console.log('I have a user');
+                      console.log('I have a user',user.email);
+
+                      ga('set', 'userId', user.email); // Set the user ID using signed-in user_id.
                       $mdDialog.hide();
 
                     }
